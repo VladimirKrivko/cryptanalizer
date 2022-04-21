@@ -13,6 +13,7 @@ public class Main {
         while (!"exit".equalsIgnoreCase(choice = reader.readLine())) {
             switch (choice) {
                 case "1" -> {
+                    System.out.println("Шифр Цезаря (шифрование):");
                     try {
                         Cipher encrypt = new Cipher(getPathFile(), getEncryptKey());
                         String text = encrypt.getTextFromFile();
@@ -25,6 +26,7 @@ public class Main {
                     }
                 }
                 case "2" -> {
+                    System.out.println("Шифр Цезаря (расшифровка):");
                     try {
                         Cipher encrypt = new Cipher(getPathFile(), -getEncryptKey());
                         String text = encrypt.getTextFromFile();
@@ -37,8 +39,7 @@ public class Main {
                     }
                 }
                 case "3" -> {
-                    System.out.println("BruteForce:");
-
+                    System.out.println("Криптоанализ методом BruteForce:");
                     try {
                         Cipher encrypt = new Cipher(getPathFile(), 0);
                         String text = encrypt.getTextFromFile();
@@ -49,6 +50,10 @@ public class Main {
                         System.out.println("Указанный файл не существует.\n" +
                                 "_______________________________________");
                     }
+                }
+                case "4" -> {
+                    System.out.println("Криптоанализ методом статистического анализа:");
+
                 }
                 default -> {
                     System.out.println("Некорректный ввод. Попробуй еще раз.");
