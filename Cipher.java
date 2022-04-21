@@ -2,62 +2,99 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class Cipher {
     final private String fileInputName;
     final private String fileOutputName;
-    final int encryptionKey;
+    static int encryptKey;
 
-    final private char[] alphabetRus = {'A', 'Б', 'В', 'Г', 'Д', 'Е', 'Ё', 'Ж', 'З', 'И', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У'
+    static final public char[] alphabetRus = {'A', 'Б', 'В', 'Г', 'Д', 'Е', 'Ё', 'Ж', 'З', 'И', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У'
             , 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я', 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л'
-            , 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я', '.', ',', '"', ':', '-', '!', '?', ' '};
+            , 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я', '.', ' ', '"', ':', '-', '!', ',', '?'};
 
-    public Cipher (String fileInputName, int encryptionKey) {
+
+    public Cipher(String fileInputName, int encryptKey) {
         this.fileInputName = fileInputName;
-        this.encryptionKey = encryptionKey;
+        this.encryptKey = encryptKey;
 
         this.fileOutputName = fileInputName.substring(0, fileInputName.lastIndexOf(".")) +
-                "_ENCRYPT" + fileInputName.substring(fileInputName.lastIndexOf("."));
+                "_CRYPT" + fileInputName.substring(fileInputName.lastIndexOf("."));
     }
 
-    public void encrypt() throws IOException {
+    public String getTextFromFile() throws IOException {
         try (FileInputStream fis = new FileInputStream(fileInputName);
-             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-             FileWriter fw = new FileWriter(fileOutputName)) {
-
-
+             ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             int b;
-            while((b = fis.read()) != -1) {
+            while ((b = fis.read()) != -1) {
                 baos.write(b);
             }
-            String s = baos.toString();
+            return baos.toString();
+        }
+    }
 
-            char[] text = s.toCharArray();
-            char[] result = new char[text.length];
+    public void pushTextToFile(String text) throws IOException {
+        try (FileWriter fw = new FileWriter(fileOutputName)) {
+            fw.write(text);
+            System.out.println("Файл сохранен по адресу: " + fileOutputName);
+        }
+    }
 
-            int key = encryptionKey;
+    public String encrypt(String inputText) throws IOException {
 
-            boolean isAdded;
+        char[] text = inputText.toCharArray();
+        char[] result = new char[text.length];
 
-            for (int i = 0; i < text.length; i++) {
-                isAdded = false;
-                for (int j = 0; j < alphabetRus.length; j++) {
-                    if (text[i] == alphabetRus[j]) {
-                        int index = (j + key) % 74;
-                        if (index < 0) {
-                            index += 74;
-                        }
-                        result[i] = alphabetRus[index];
-                        isAdded = true;
+        boolean isAdded;
+
+        for (int i = 0; i < text.length; i++) {
+            isAdded = false;
+            for (int j = 0; j < alphabetRus.length; j++) {
+                if (text[i] == alphabetRus[j]) {
+                    int index = (j + encryptKey) % alphabetRus.length;
+                    if (index < 0) {
+                        index += alphabetRus.length;
                     }
-                }
-                if (!isAdded) {
-                    result[i] = text[i];
+                    result[i] = alphabetRus[index];
+                    isAdded = true;
                 }
             }
-            fw.write(result);
+            if (!isAdded) {
+                result[i] = text[i];
+            }
         }
-        System.out.println("Файл сохранен по адресу: " + fileOutputName);
+        return new String(result);
+    }
+
+    public String bruteForce(String inputText) throws IOException {
+
+        int decryptKey = 0;
+        int marker = 0;
+        String text;
+
+        while (encryptKey < alphabetRus.length) {
+
+            encryptKey++;
+
+            text = encrypt(inputText);
+
+            int countMarker = count(text, ", ");
+
+            if (countMarker > marker) {
+                marker = countMarker;
+                decryptKey = encryptKey;
+            }
+        }
+        encryptKey = decryptKey;
+        return encrypt(inputText);
+    }
+
+    public static int count(String text, String fragment) {
+        return (text.length() - text.replace(fragment, "").length()) / fragment.length();
+    }
+
+    public String getFileInputName() {
+        return fileInputName;
     }
 
     public String getFileOutputName() {
