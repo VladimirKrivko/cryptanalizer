@@ -89,6 +89,30 @@ public class Cipher {
         return encrypt(inputText);
     }
 
+    /*public String statAnal(String inputText) throws IOException {
+
+        int decryptKey = 0;
+        int marker = 0;
+        String text;
+
+        while (encryptKey < alphabetRus.length) {
+
+            encryptKey++;
+
+            text = encrypt(inputText);
+
+            int countMarker = count(text, ", ");
+
+            if (countMarker > marker) {
+                marker = countMarker;
+                decryptKey = encryptKey;
+            }
+        }
+        encryptKey = decryptKey;
+        return encrypt(inputText);
+    }*/
+
+
     public static int count(String text, String fragment) {
         return (text.length() - text.replace(fragment, "").length()) / fragment.length();
     }

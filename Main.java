@@ -15,40 +15,42 @@ public class Main {
                 case "1" -> {
                     System.out.println("Шифр Цезаря (шифрование):");
                     try {
-                        Cipher encrypt = new Cipher(getPathFile(), getEncryptKey());
+                        String pathFile = getPathFile();
+                        int key = getEncryptKey();
+
+                        Cipher encrypt = new Cipher(pathFile, key);
                         String text = encrypt.getTextFromFile();
                         String encryptText = encrypt.encrypt(text);
                         encrypt.pushTextToFile(encryptText);
                     } catch (IOException e) {
-                        e.printStackTrace();
-                        System.out.println("Указанный файл не существует.\n" +
-                                "_______________________________________");
+                        System.out.println("_______________________________________");
                     }
                 }
                 case "2" -> {
                     System.out.println("Шифр Цезаря (расшифровка):");
                     try {
-                        Cipher encrypt = new Cipher(getPathFile(), -getEncryptKey());
+                        String pathFile = getPathFile();
+                        int key = getEncryptKey();
+
+                        Cipher encrypt = new Cipher(pathFile, -key);
                         String text = encrypt.getTextFromFile();
                         String encryptText = encrypt.encrypt(text);
                         encrypt.pushTextToFile(encryptText);
                     } catch (IOException e) {
-                        e.printStackTrace();
-                        System.out.println("Указанный файл не существует.\n" +
-                                "_______________________________________");
+                        System.out.println("_______________________________________");
                     }
                 }
                 case "3" -> {
                     System.out.println("Криптоанализ методом BruteForce:");
                     try {
-                        Cipher encrypt = new Cipher(getPathFile(), 0);
+                        String pathFile = getPathFile();
+
+                        Cipher encrypt = new Cipher(pathFile, 0);
                         String text = encrypt.getTextFromFile();
                         String encryptText = encrypt.bruteForce(text);
                         encrypt.pushTextToFile(encryptText);
                     } catch (IOException e) {
-                        e.printStackTrace();
-                        System.out.println("Указанный файл не существует.\n" +
-                                "_______________________________________");
+                        System.out.println("_______________________________________");
                     }
                 }
                 case "4" -> {
@@ -72,23 +74,25 @@ public class Main {
     }
 
     static String getPathFile() throws IOException {
-        System.out.println("Введите путь файла.");
+        System.out.println("Введи путь файла.");
         String pathFile = reader.readLine();
         Path fileInputName;
         fileInputName = Path.of(pathFile);
-        try {
-            if (!Files.exists(fileInputName) || pathFile.equals("")) {
+        while (!Files.exists(fileInputName) || pathFile.equals("")) {
+            System.out.println("Указанный файл не существует. Повтори ввод.\n" +
+                    "[Введи menu - для выхода в главное меню.]\n" +
+                    "_______________________________________");
+            pathFile = reader.readLine();
+            if (pathFile.equals("menu")) {
                 throw new IOException();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+            fileInputName = Path.of(pathFile);
         }
         return pathFile;
     }
 
     public static int getEncryptKey() throws IOException {
-        System.out.println("Введите ключ шифрования.");
+        System.out.println("Введи ключ шифрования.");
         char[] chars = reader.readLine().toCharArray();
         int key = 0;
         for (int i = 0; i < chars.length; i++) {
