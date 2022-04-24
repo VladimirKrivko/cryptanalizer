@@ -90,7 +90,7 @@ public class Cipher {
     }
 
     public String statAnal(String inputText) throws IOException {
-        String[] popLetter = " оеаин".split("");
+        String[] popLetter = " оеаинтср".split("");
 
         int[] keys = new int[popLetter.length];
 
