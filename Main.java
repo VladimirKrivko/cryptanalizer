@@ -47,7 +47,7 @@ public class Main {
 
                         Cipher encrypt = new Cipher(pathFile, 0);
                         String text = encrypt.getTextFromFile();
-                        String encryptText = encrypt.bruteForce(text);
+                        String encryptText = encrypt.bruteForce(text, ", ");
                         encrypt.pushTextToFile(encryptText);
                     } catch (IOException e) {
                         System.out.println("_______________________________________");
@@ -55,7 +55,16 @@ public class Main {
                 }
                 case "4" -> {
                     System.out.println("Криптоанализ методом статистического анализа:");
+                    try {
+                        String pathFile = getPathFile();
 
+                        Cipher encrypt = new Cipher(pathFile, 0);
+                        String text = encrypt.getTextFromFile();
+                        String encryptText = encrypt.statAnal(text);
+                        encrypt.pushTextToFile(encryptText);
+                    } catch (IOException e) {
+                        System.out.println("_______________________________________");
+                    }
                 }
                 default -> {
                     System.out.println("Некорректный ввод. Попробуй еще раз.");
@@ -70,6 +79,7 @@ public class Main {
         System.out.println("Введи 1 - если надо зашифровать файл.\n" +
                            "Введи 2 - если надо расшифровать файл.\n" +
                            "Введи 3 - если надо расшифровать файл без ключа (brute force).\n" +
+                           "Введи 4 - если надо расшифровать файл частотным анализом.\n" +
                            "Введи exit - для выхода из программы.");
     }
 

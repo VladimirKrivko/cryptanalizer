@@ -2,7 +2,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.*;
 
 public class Cipher {
     final private String fileInputName;
@@ -66,7 +66,7 @@ public class Cipher {
         return new String(result);
     }
 
-    public String bruteForce(String inputText) throws IOException {
+    public String bruteForce(String inputText, String popularLetter) throws IOException {
 
         int decryptKey = 0;
         int marker = 0;
@@ -78,7 +78,7 @@ public class Cipher {
 
             text = encrypt(inputText);
 
-            int countMarker = count(text, ", ");
+            int countMarker = count(text, popularLetter);
 
             if (countMarker > marker) {
                 marker = countMarker;
@@ -89,28 +89,34 @@ public class Cipher {
         return encrypt(inputText);
     }
 
-    /*public String statAnal(String inputText) throws IOException {
+    public String statAnal(String inputText) throws IOException {
+        String[] popLetter = " оеаин".split("");
 
-        int decryptKey = 0;
-        int marker = 0;
-        String text;
+        int[] keys = new int[popLetter.length];
 
-        while (encryptKey < alphabetRus.length) {
+        for (int i = 0; i < popLetter.length; i++) {
+            bruteForce(inputText.toLowerCase(), popLetter[i]);
+            keys[i] = encryptKey;
+            encryptKey = 0;
+        }
 
-            encryptKey++;
-
-            text = encrypt(inputText);
-
-            int countMarker = count(text, ", ");
-
-            if (countMarker > marker) {
-                marker = countMarker;
-                decryptKey = encryptKey;
+        int key = 0;
+        int maxRepeatKey = 0;
+        for (int i = 0; i < keys.length; i++) {
+            int countRepeatKey = 0;
+            for (int j = 0; j < keys.length; j++) {
+                if (keys[i] == keys[j]) {
+                    countRepeatKey++;
+                }
+            }
+            if (countRepeatKey > maxRepeatKey) {
+                maxRepeatKey = countRepeatKey;
+                key = keys[i];
             }
         }
-        encryptKey = decryptKey;
+        encryptKey = key;
         return encrypt(inputText);
-    }*/
+    }
 
 
     public static int count(String text, String fragment) {
