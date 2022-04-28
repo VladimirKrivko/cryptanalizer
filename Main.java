@@ -16,7 +16,7 @@ public class Main {
                     System.out.println("Шифр Цезаря (шифрование):");
                     try {
                         String pathFile = getPathFile();
-                        int key = getEncryptKey();
+                        int key = generateEncryptKey();
 
                         Cipher encrypt = new Cipher(pathFile, key);
                         String text = encrypt.getTextFromFile();
@@ -30,7 +30,7 @@ public class Main {
                     System.out.println("Шифр Цезаря (расшифровка):");
                     try {
                         String pathFile = getPathFile();
-                        int key = getEncryptKey();
+                        int key = generateEncryptKey();
 
                         Cipher encrypt = new Cipher(pathFile, -key);
                         String text = encrypt.getTextFromFile();
@@ -58,10 +58,25 @@ public class Main {
                     try {
                         String pathFile = getPathFile();
 
-                        Cipher encrypt = new Cipher(pathFile, 0);
-                        String text = encrypt.getTextFromFile();
-                        String encryptText = encrypt.statAnal(text);
-                        encrypt.pushTextToFile(encryptText);
+                        Cipher encryptText = new Cipher(pathFile, 0);
+                        String text = encryptText.getTextFromFile();
+                        char[] popLettersCipherText = encryptText.frequencyOfLetters(text);
+                        System.out.println("Добавим файл с текстом того же автора (Введи add)?\n" +
+                                           "Или обойдемся общей частотной статистикой русского алфавита (Введи что-хош)?");
+                        String option;
+                        if ("add".equals(option = reader.readLine())) {
+                            String pathFileAuthor = getPathFile();
+                            Cipher openText = new Cipher(pathFileAuthor, 0);
+                            char[] popLettersOpenTextAuthor = openText.frequencyOfLetters(openText.getTextFromFile());
+                            int key = encryptText.statAnal(popLettersOpenTextAuthor, popLettersCipherText);
+                            Cipher.setEncryptKey(key); // разобраться с геттерами сеттерами!!!
+                            encryptText.pushTextToFile(encryptText.encrypt(text));
+                        } else {
+                            char[] popLettersOpenTextAuthor = " оеаинтсрвл".toCharArray();
+                            int key = encryptText.statAnal(popLettersOpenTextAuthor, popLettersCipherText);
+                            Cipher.setEncryptKey(key);
+                            encryptText.pushTextToFile(encryptText.encrypt(text));
+                        }
                     } catch (IOException e) {
                         System.out.println("_______________________________________");
                     }
@@ -101,7 +116,7 @@ public class Main {
         return pathFile;
     }
 
-    public static int getEncryptKey() throws IOException {
+    public static int generateEncryptKey() throws IOException {
         System.out.println("Введи ключ шифрования.");
         char[] chars = reader.readLine().toCharArray();
         int key = 0;
@@ -111,6 +126,9 @@ public class Main {
             } else {
                 key -= chars[i];
             }
+        }
+        if (key > Cipher.alphabetRus.length) {
+            key %= Cipher.alphabetRus.length;
         }
         return key;
     }
