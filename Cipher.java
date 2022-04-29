@@ -95,14 +95,13 @@ public class Cipher {
     public int statAnal(char[] popLettersOpenTextAuthor, char[] popLettersCipherText) throws IOException {
 
         int[] keys = new int[popLettersOpenTextAuthor.length];
-
-        int indexAlphabet;// = 0;
+        int indexAlphabet;
         for (int i = 0; i < popLettersCipherText.length; i++) {
 
             for (indexAlphabet = 0; indexAlphabet < alphabetRus.length; indexAlphabet++) {      // получить индекс шифросимвола в массиве алфавита.
                 if (alphabetRus[indexAlphabet] == popLettersCipherText[i]) {
-                    //indexAlphabet = indexAlphabet;
-                    System.out.println("Индекс шифробуквы " + popLettersCipherText[i] + " в алфавите: " + indexAlphabet);
+//                    indexAlphabet = indexAlphabet;
+//                    System.out.println("Индекс шифробуквы " + popLettersCipherText[i] + " в алфавите: " + indexAlphabet);
                     break;
                 }
             }
@@ -119,9 +118,7 @@ public class Cipher {
                 }
             }
         }
-
-        System.out.println(Arrays.toString(keys));
-
+//        System.out.println(Arrays.toString(keys));
         int key = 0;
         int maxRepeatKey = 0;
 
@@ -137,7 +134,6 @@ public class Cipher {
                 key = keys[i];
             }
         }
-
         System.out.println(key);
         return key;
     }
