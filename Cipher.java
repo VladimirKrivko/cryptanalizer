@@ -14,9 +14,6 @@ public class Cipher {
             , 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я', 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л'
             , 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я', '.', ' ', '"', ':', '-', '!', ',', '?'};
 
-    static final public char[] frequencyAlphabetRus = {'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т',
-            'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я', ' '};
-
     static final public char[] popLetterRus = " оеаинтср".toCharArray();
 
 
@@ -163,7 +160,7 @@ public class Cipher {
     }
 
     public char[] frequencyOfLetters (String inputText) {
-        String text = inputText;//.toLowerCase();
+        String text = inputText;
         char[] popLetterInText = new char[11];
 
         Map<Character, Integer> unsortedMap = new HashMap<>();

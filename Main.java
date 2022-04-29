@@ -103,7 +103,7 @@ public class Main {
         String pathFile = reader.readLine();
         Path fileInputName;
         fileInputName = Path.of(pathFile);
-        while (!Files.exists(fileInputName) || pathFile.equals("")) {
+        while (!Files.exists(fileInputName) || Files.isDirectory(fileInputName) || pathFile.equals("")) {
             System.out.println("Указанный файл не существует. Повтори ввод.\n" +
                     "[Введи menu - для выхода в главное меню.]\n" +
                     "_______________________________________");
